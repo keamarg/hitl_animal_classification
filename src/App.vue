@@ -25,6 +25,7 @@
     <div v-if="showUserPrompt" class="user-prompt">
       Please select the image you had in mind.
     </div>
+
     <div class="actions">
       <button class="save-model" @click="saveModelWeights">
         Save Model Weights
@@ -33,6 +34,11 @@
       <button class="use-trained-model" @click="useTrainedModel">
         Use Trained Model
       </button>
+    </div>
+    <div class="model-info" style="margin-top: 10px; text-align: center">
+      <p v-if="guessedIndex !== null">
+        Model guessed with {{ guessedCertaintyFormatted }} certainty.
+      </p>
     </div>
   </div>
 </template>
@@ -59,6 +65,7 @@ export default {
       availableImages: [],
       guessedCertainty: 0,
       selectedCategoryIndex: null,
+      guessedCertaintyFormatted: "0%",
     };
   },
   mounted() {
@@ -201,17 +208,10 @@ export default {
             setTimeout(() => {
               this.showUserPrompt = true;
             }, 1000);
-            if (data.weights && data.guessed_index != null) {
-              const guessedProbabilities = data.weights;
-              this.guessedCertainty = Math.max(
-                0,
-                Math.min(guessedProbabilities[data.guessed_index] * 100, 100)
-              );
-            } else {
-              console.warn(
-                "Probabilities or guessed index not available in response data."
-              );
-            }
+            this.guessedCertainty = data.certainty_percentage;
+            this.guessedCertaintyFormatted = `${this.guessedCertainty.toFixed(
+              2
+            )}%`;
           })
           .catch((error) => {
             console.error("Error during /predict request:", error);

@@ -89,14 +89,22 @@ def predict():
             best_match = idx
 
     guessed_index = best_match
-    print(f'Model guessed index: {guessed_index}')
+
+    # Calculate the certainty percentage for the guessed index
+    input_features = torch.tensor([attributes_list[guessed_index]], dtype=torch.float32)
+    output = model(input_features)
+    probabilities = torch.softmax(output, dim=1)
+    certainty_percentage = float(probabilities[0, category_index]) * 100
+
+    print(f'Model guessed index: {guessed_index}, Certainty: {certainty_percentage:.2f}%')
 
     # Save the updated model weights
     torch.save(model.state_dict(), model_weights_path)
 
     response = {
         'message': 'Model has made a guess',
-        'guessed_index': guessed_index
+        'guessed_index': guessed_index,
+        'certainty_percentage': certainty_percentage
     }
     return jsonify(response)
 
