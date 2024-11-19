@@ -48,6 +48,8 @@ const backendUrl =
   process.env.NODE_ENV === "production"
     ? process.env.VUE_APP_BACKEND_URL_PROD
     : process.env.VUE_APP_BACKEND_URL_DEV;
+const publicPath = process.env.BASE_URL || "/";
+console.log("Using publicPath:", publicPath);
 
 console.log("Using backend URL:", backendUrl);
 
@@ -162,7 +164,7 @@ export default {
       }
     },
     loadZooDataset() {
-      fetch(`/zoo_dataset.json`)
+      fetch(`${publicPath}zoo_dataset.json`)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Failed to fetch zoo dataset");
@@ -175,7 +177,7 @@ export default {
             return {
               name: item.animal_name,
               type: item.type, // Keep track of the animal type to ensure unique categories
-              url: `/animal_images/${item.animal_name}.jpg`,
+              url: `${publicPath}animal_images/${item.animal_name}.jpg`,
               attributes: Object.values(item).slice(1, -1), // Exclude 'animal_name' (first) and 'animal_type' (last)
             };
           });
