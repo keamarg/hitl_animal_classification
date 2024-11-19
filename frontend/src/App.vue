@@ -46,8 +46,9 @@
 <script>
 const backendUrl =
   process.env.NODE_ENV === "production"
-    ? process.env.VUE_APP_BACKEND_URL_PRODUCTION
-    : process.env.VUE_APP_BACKEND_URL;
+    ? process.env.VUE_APP_BACKEND_URL_PROD
+    : process.env.VUE_APP_BACKEND_URL_DEV;
+
 console.log("Using backend URL:", backendUrl);
 
 export default {
@@ -161,7 +162,7 @@ export default {
       }
     },
     loadZooDataset() {
-      fetch("/zoo_dataset.json")
+      fetch(`/zoo_dataset.json`)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Failed to fetch zoo dataset");

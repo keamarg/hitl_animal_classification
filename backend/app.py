@@ -16,8 +16,10 @@ app = Flask(__name__)
 # Set debug mode based on environment
 if os.getenv('FLASK_ENV') == 'production':
     app.config['DEBUG'] = False
+    backend_host = os.getenv('BACKEND_HOST_PROD')
 else:
     app.config['DEBUG'] = True
+    backend_host = os.getenv('BACKEND_HOST_DEV')
 
 # Define a mapping for category names to indices
 categories_mapping = {
@@ -186,4 +188,4 @@ def use_trained_model():
 
 
 if __name__ == "__main__":
-    app.run(host=os.getenv('BACKEND_HOST'), port=int(os.getenv('BACKEND_PORT')), debug=app.config['DEBUG'])
+    app.run(host=backend_host, port=int(os.getenv('BACKEND_PORT')), debug=app.config['DEBUG'])
