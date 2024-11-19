@@ -7,7 +7,6 @@ dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 module.exports = defineConfig({
   transpileDependencies: true,
-  publicPath:
-    process.env.NODE_ENV === "production" ? "/hitl/frontend/dist/" : "/",
+  publicPath: process.env.NODE_ENV === "production" ? "/hitl/" : "/",
   // Your existing configurations...
 });
