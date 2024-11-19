@@ -4,9 +4,20 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import json
+from dotenv import load_dotenv
 import os
 
+# Load environment variables from .env file
+env_path = os.path.join(os.path.dirname(__file__), '..', '.env')
+load_dotenv(dotenv_path=env_path)
+
 app = Flask(__name__)
+
+# Set debug mode based on environment
+if os.getenv('FLASK_ENV') == 'production':
+    app.config['DEBUG'] = False
+else:
+    app.config['DEBUG'] = True
 
 # Define a mapping for category names to indices
 categories_mapping = {
@@ -175,4 +186,4 @@ def use_trained_model():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5001, debug=True)
+    app.run(host=os.getenv('BACKEND_HOST'), port=int(os.getenv('BACKEND_PORT')), debug=app.config['DEBUG'])

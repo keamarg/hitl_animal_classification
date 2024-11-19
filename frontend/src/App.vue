@@ -44,6 +44,12 @@
 </template>
 
 <script>
+const backendUrl =
+  process.env.NODE_ENV === "production"
+    ? process.env.VUE_APP_BACKEND_URL_PRODUCTION
+    : process.env.VUE_APP_BACKEND_URL;
+console.log("Using backend URL:", backendUrl);
+
 export default {
   data() {
     return {
@@ -73,7 +79,7 @@ export default {
   },
   methods: {
     resetModel() {
-      fetch("http://127.0.0.1:5001/reset_model", {
+      fetch(`${backendUrl}/reset_model`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
       })
@@ -94,7 +100,7 @@ export default {
         });
     },
     useTrainedModel() {
-      fetch("http://127.0.0.1:5001/use_trained_model", {
+      fetch(`${backendUrl}/use_trained_model`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
       })
@@ -133,7 +139,7 @@ export default {
           "Sending feedback to backend:",
           JSON.stringify(feedbackData)
         );
-        fetch("http://127.0.0.1:5001/train", {
+        fetch(`${backendUrl}/train`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(feedbackData),
@@ -186,7 +192,7 @@ export default {
           attributes: image.attributes,
         }));
 
-        fetch("http://127.0.0.1:5001/predict", {
+        fetch(`${backendUrl}/predict`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -250,10 +256,10 @@ export default {
     saveModelWeights() {
       const currentDateTime = new Date().toISOString().replace(/[:.]/g, "-");
       const weightsPath = `/weights/model_weights_${currentDateTime}.pth`;
-      fetch(
-        `http://127.0.0.1:5001/save_model_weights?weights_path=${weightsPath}`,
-        { method: "POST", headers: { "Content-Type": "application/json" } }
-      )
+      fetch(`${backendUrl}/save_model_weights?weights_path=${weightsPath}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      })
         .then((response) => {
           if (!response.ok) {
             throw new Error("Network response was not ok");
